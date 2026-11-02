@@ -13,3 +13,123 @@ section{position:relative;width:1366px;overflow:hidden}
 .t{white-space:pre;font-synthesis:weight;font-kerning:normal}
 .t a{color:inherit;text-decoration:none}
 .t a:hover,.t a:focus-visible{text-decoration:underline}
+
+/* Social posts: each card drifts left to right, leaves the right edge, and re-enters from the left.
+   All cards share one loop length and speed, so the row keeps its spacing. */
+.drift-stage{position:absolute;inset:0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 48px,#000 calc(100% - 48px),transparent);mask-image:linear-gradient(90deg,transparent,#000 48px,#000 calc(100% - 48px),transparent)}
+.drift-card{position:absolute;left:0;width:344px;height:590px;will-change:transform;transform:translateX(var(--rest));animation:drift 50.5s linear var(--delay) infinite}
+@keyframes drift{from{transform:translateX(-346px)}to{transform:translateX(1574px)}}
+.post{background:#fff;border-radius:25px}
+.post-photo{position:absolute;left:5px;top:27px;width:334px;height:444px;max-width:none;object-fit:cover}
+.post-icon{position:absolute;top:492px;height:28px;max-width:none}
+.post-handle{position:absolute;max-width:none}
+@media (prefers-reduced-motion:reduce){
+  .drift-stage{-webkit-mask-image:none;mask-image:none}
+  .drift-card{animation:none}
+}
+
+/* Hero: the telephone falls in, bounces to rest, then swings from the top of its cord like a pendulum.
+   The file icons pulse in size together. */
+.hero-phone{transform-origin:50% 0;animation:phone-drop 1.68s linear both,phone-swing-start .8s cubic-bezier(.37,0,.63,1) 1.72s forwards,phone-swing 2s cubic-bezier(.37,0,.63,1) 2.52s infinite,phone-lift 1s cubic-bezier(.37,0,.63,1) 2.52s infinite}
+.hero-file{animation:file-pulse .95s ease-in-out infinite}
+/* Falls under gravity, then each bounce is lower and shorter than the last. */
+@keyframes phone-drop{
+  0%{translate:0 -560px;animation-timing-function:cubic-bezier(.55,.085,.68,.53)}
+  41.8%{translate:0 0;animation-timing-function:cubic-bezier(.25,.46,.45,.94)}
+  56.5%{translate:0 -70px;animation-timing-function:cubic-bezier(.55,.085,.68,.53)}
+  71.6%{translate:0 0;animation-timing-function:cubic-bezier(.25,.46,.45,.94)}
+  80.6%{translate:0 -26px;animation-timing-function:cubic-bezier(.55,.085,.68,.53)}
+  89.6%{translate:0 0;animation-timing-function:cubic-bezier(.25,.46,.45,.94)}
+  94.9%{translate:0 -9px;animation-timing-function:cubic-bezier(.55,.085,.68,.53)}
+  100%{translate:0 0}
+}
+/* Eases from rest out to the first end of the swing, so the loop starts without a jerk. */
+@keyframes phone-swing-start{
+  from{rotate:0deg;translate:0 0}
+  to{rotate:12deg;translate:0 -18px}
+}
+@keyframes phone-swing{
+  0%,100%{rotate:12deg}
+  50%{rotate:-12deg}
+}
+/* Lift runs at twice the swing speed: the phone rises at each end and dips through the center. */
+@keyframes phone-lift{
+  0%,100%{translate:0 -18px}
+  50%{translate:0 0}
+}
+@keyframes file-pulse{
+  0%,100%{scale:.88}
+  50%{scale:1.14}
+}
+@media (prefers-reduced-motion:reduce){
+  .hero-phone,.hero-file{animation:none}
+}
+
+/* About me: typewriter effect, driven by js/animations.js */
+.typewriter-rest{visibility:hidden}
+.typewriter-caret{display:inline-block;width:2px;height:1em;margin-right:-2px;vertical-align:-.12em;background:currentColor;animation:caret-blink .9s steps(1) infinite}
+@keyframes caret-blink{50%{opacity:0}}
+
+/* About me: the camera stays still, flashes, and the portrait develops on its screen.
+   js/animations.js starts this the first time the camera scrolls into view. */
+.camera-rig{position:absolute;inset:0;pointer-events:none}
+.camera-flash{position:absolute;left:647px;top:130px;width:620px;height:620px;border-radius:50%;background:radial-gradient(circle,#fff 0,rgba(255,255,255,.75) 30%,rgba(255,255,255,0) 70%);opacity:0}
+.camera-rig.is-armed .camera-photo{opacity:0}
+.camera-rig.is-playing .camera-photo{animation:photo-develop 1.9s ease-out .45s both}
+.camera-rig.is-playing .camera-flash{animation:camera-flash .75s ease-out .4s both}
+@keyframes camera-flash{
+  0%{opacity:0}
+  12%{opacity:1}
+  100%{opacity:0}
+}
+@keyframes photo-develop{
+  0%{opacity:0;filter:grayscale(1) brightness(1.7) contrast(.7)}
+  45%{opacity:.75;filter:grayscale(.7) brightness(1.3) contrast(.85)}
+  100%{opacity:1;filter:grayscale(0) brightness(1) contrast(1)}
+}
+
+/* Campus Career: screen recordings inside the monitor and laptop mockups */
+.site-video{object-fit:fill}
+
+/* My Campaigns: a very slight lift when a card is hovered. Only the card's own shape reacts. */
+.campaign-card{position:absolute;inset:0;pointer-events:none;transition:transform .3s ease}
+.campaign-card img{pointer-events:auto}
+.campaign-card svg{pointer-events:none}
+.campaign-card svg *{pointer-events:auto}
+@media (hover:hover) and (prefers-reduced-motion:no-preference){
+  .campaign-card:hover{transform:translateY(-3px) scale(1.015)}
+}
+
+/* Phone mockups: a looping stream of hearts. Each heart rises, grows in, sways side to side,
+   then shrinks away at the top. The still image is the reduced-motion fallback. */
+.hearts-still{display:none}
+.hearts{width:54px;height:227px;pointer-events:none}
+.heart{position:absolute;left:0;top:0;width:22px;height:22px;opacity:0;animation:heart-rise 3.2s linear var(--d) infinite}
+.heart i{display:block;width:100%;height:100%;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'%3E%3Ccircle cx='22' cy='22' r='21' fill='%23f0586e'/%3E%3Cpath d='M22 33C15 27 10 23.500 10 18.500 10 15 12.700 12.500 16 12.500 18.400 12.500 20.700 13.800 22 15.800 23.300 13.800 25.600 12.500 28 12.500 31.300 12.500 34 15 34 18.500 34 23.500 29 27 22 33Z' fill='%23fff'/%3E%3C/svg%3E") center/contain no-repeat;animation:heart-sway 1.6s ease-in-out var(--d) infinite alternate}
+@keyframes heart-rise{
+  0%{translate:0 214px;scale:.12;opacity:0}
+  8%{translate:0 192px;scale:.4;opacity:.55}
+  26%{translate:0 142px;scale:1;opacity:.85}
+  40%{translate:0 103px;scale:1;opacity:1}
+  88%{translate:0 8px;scale:1;opacity:1}
+  100%{translate:0 -10px;scale:.2;opacity:0}
+}
+@keyframes heart-sway{
+  from{transform:translateX(var(--a))}
+  to{transform:translateX(var(--b))}
+}
+@media (prefers-reduced-motion:reduce){
+  .hearts{display:none}
+  .hearts-still{display:block}
+}
+
+/* Results: the 36K + figure counts up, driven by js/animations.js */
+.stat-count{display:inline-block;text-align:right}
+
+/* Results: the three post phones fade in moving left to right, one after another. */
+.reveal-phone.is-armed{opacity:0}
+.reveal-phone.is-playing{animation:reveal-ltr 1.8s cubic-bezier(.2,.7,.2,1) var(--reveal-delay) both}
+@keyframes reveal-ltr{
+  from{opacity:0;translate:-70px 0}
+  to{opacity:1;translate:0 0}
+}
