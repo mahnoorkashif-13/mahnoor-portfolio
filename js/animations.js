@@ -5,8 +5,8 @@
   if (!blocks.length || !("IntersectionObserver" in window)) return;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-  var CHAR_DELAY = 20;     // milliseconds per character
-  var PAUSE_DELAY = 180;   // extra pause after a sentence
+  var CHAR_DELAY = 8;      // milliseconds per character
+  var PAUSE_DELAY = 70;    // extra pause after a sentence
 
   var lines = [];
   blocks.forEach(function (block) {
